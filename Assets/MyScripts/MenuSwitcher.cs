@@ -7,15 +7,19 @@ public class MenuSwitcher : MonoBehaviour
     public GameObject game;
     public GameObject startMenu;
     public GameObject additionMenu;
-    public GameObject drawArea;
     CursorManagerScript cms;
     GeneralManagment gm;
-
+    public RectTransform gameDrawArea;
+    public RectTransform additionDrawArea;
+    LineRenderer line;
     // Use this for initialization
     void Start()
     {
         cms = GetComponent<CursorManagerScript>();
         gm = GetComponent<GeneralManagment>();
+        StartMenuEnable();
+        line = GetComponent<LineRenderer>();
+        //Debug.Log("StartmenuEnabled");
     }
 
     // Update is called once per frame
@@ -32,7 +36,7 @@ public class MenuSwitcher : MonoBehaviour
         gm.isInStartMenu = true;
         gm.isInGame = false;
         gm.isInAddition = false;
-        drawArea.SetActive(false);
+        line.enabled = false;
     }
     public void AdditionMenuEnable()
     {
@@ -43,7 +47,8 @@ public class MenuSwitcher : MonoBehaviour
         gm.isInStartMenu = false;
         gm.isInGame = false;
         gm.isInAddition = true;
-        drawArea.SetActive(true);
+        gm.drawArea = additionDrawArea;
+        gm.GetComponent<LineRenderer>().enabled = true;
     }
     public void Game()
     {
@@ -55,6 +60,6 @@ public class MenuSwitcher : MonoBehaviour
         gm.isInGame = true;
         gm.isInAddition = false;
         gm.drawArea.gameObject.SetActive(true);
-        drawArea.SetActive(true);
+        gm.drawArea = gameDrawArea;
     }
 }

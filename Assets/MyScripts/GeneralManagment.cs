@@ -17,7 +17,7 @@ public class GeneralManagment : MonoBehaviour
     public bool UseProtractor = false;
 
     [Tooltip("The name of the gesture library to load. Do NOT include '.xml'")]
-    public string libraryToLoad = "shapes";
+    string libraryToLoad = "shapes";
 
     [Tooltip("A new point will be placed if it is this further than the last point.")]
     public float distanceBetweenPoints = 10f;
@@ -25,8 +25,8 @@ public class GeneralManagment : MonoBehaviour
     [Tooltip("Minimum amount of points required to recognize a gesture.")]
     public int minimumPointsToRecognize = 10;
 
-    [Tooltip("Material for the line renderer.")]
-    public Material lineMaterial;
+    //[Tooltip("Material for the line renderer.")]
+    //public Material lineMaterial;
 
     [Tooltip("Start thickness of the gesture.")]
     public float startThickness = 0.25f;
@@ -48,6 +48,8 @@ public class GeneralManagment : MonoBehaviour
 
     [Tooltip("Messages will show up here")]
     public Text messageArea;
+
+    public Text additionResult;
 
     // Current platform.
     RuntimePlatform platform;
@@ -87,9 +89,10 @@ public class GeneralManagment : MonoBehaviour
     {
         platform = Application.platform;
         QualitySettings.antiAliasing = 8;
-        gestureRenderer = gameObject.AddComponent<LineRenderer>();
+        //gestureRenderer = gameObject.AddComponent<LineRenderer>();
+        gestureRenderer = GetComponent<LineRenderer>();
         gestureRenderer.SetVertexCount(0);
-        gestureRenderer.material = lineMaterial;
+        //gestureRenderer.material = lineMaterial;
         gestureRenderer.SetColors(startColor, endColor);
         gestureRenderer.SetWidth(startThickness, endThickness);
     }
@@ -99,6 +102,7 @@ public class GeneralManagment : MonoBehaviour
     void Start()
     {
         gl = new GestureLibrary(libraryToLoad, forceCopy);
+        Debug.Log("Я стартанул");
     }
 
 
@@ -162,21 +166,22 @@ public class GeneralManagment : MonoBehaviour
 
                 // Capture the gesture, recognize it, fire the recognition event,
                 // and clear the gesture from the screen.
-                //if (Input.GetMouseButtonUp(0))
-                //{
-
-                //    if (points.Count > minimumPointsToRecognize)
-                //    {
-                //        gesture = new Gesture(points);
-                //        result = gesture.Recognize(gl, UseProtractor);
-                //        SetMessage("Gesture is recognized as <color=#ff0000>'" + result.Name + "'</color> with a score of " + result.Score);
-                //    }
-
-                //}
-                if (isInGame == true)
+                if (Input.GetMouseButtonUp(0))
                 {
 
+                    if (points.Count > minimumPointsToRecognize)
+                    {
+                        gesture = new Gesture(points);
+                        result = gesture.Recognize(gl, UseProtractor);
+                        SetMessage("Gesture is recognized as <color=#ff0000>'" + result.Name + "'</color> with a score of " + result.Score);
+                    }
+
                 }
+                //if (isInGame == true)
+                //{
+                //    messageArea.text = "Currect";
+                //    Debug.Log("Я в игре");
+                //}
             }
         }
 
@@ -188,9 +193,20 @@ public class GeneralManagment : MonoBehaviour
     /// </summary>
     public void AddGesture()
     {
-        Gesture newGesture = new Gesture(points, newGestureName.text);
-        gl.AddGesture(newGesture);
-        SetMessage(newGestureName.text + " has been added to the library");
+        try
+        {
+            if (points == null)
+                Debug.Log("Ой божечки, точечки пропали");
+            Gesture newGesture = new Gesture(points, newGestureName.text);
+            gl.AddGesture(newGesture);
+            SetMessage(newGestureName.text + " has been added to the library");
+            additionResult.text = newGestureName.text + " has been added to the library";
+            
+        }
+        catch (System.Exception e)
+        {
+            Debug.Log(e.Message);   
+        }
     }
 
 
@@ -211,7 +227,7 @@ public class GeneralManagment : MonoBehaviour
     {
         points.Clear();
 
-        if (isInAddition = true)
+        if (isInAddition == true)
         {
             gestureRenderer.SetVertexCount(0);
         }
