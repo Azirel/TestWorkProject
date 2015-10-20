@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class CursorManagerScript : MonoBehaviour
 {
     Vector3 pos;
-    LineRenderer line;
+    public LineRenderer line;
     public int delays = 0;
     //public UnityEngine.UI.Text text;
     public float delayTime;
@@ -45,7 +45,14 @@ public class CursorManagerScript : MonoBehaviour
         {
             AddPoint(pos);
             line.enabled = true;
-            line.SetPosition(0, pos);
+            try
+            {
+                line.SetPosition(0, pos);
+            }
+            catch (System.Exception)
+            {
+                   
+            }
         }
         ModifyLine();
         if (pointsList.Count > 0)

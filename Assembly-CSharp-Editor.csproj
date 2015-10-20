@@ -47,9 +47,9 @@
   <ItemGroup>
      <Compile Include="Assets\GestureRecognizer\Scripts\Editor\GestureBehaviourInspector.cs" />
      <Compile Include="Assets\GestureRecognizer\Scripts\Editor\MultiStrokeBehaviourInspector.cs" />
+     <None Include="Assets\Resources\shapes.xml" />
      <None Include="Assets\GestureRecognizer\Resources\numbers.xml" />
      <None Include="Assets\GestureRecognizer\Resources\multistroke_shapes.xml" />
-     <None Include="Assets\GestureRecognizer\Resources\shapes.xml" />
      <None Include="Assets\GestureRecognizer\Resources\alphabet.xml" />
  <Reference Include="UnityEditor.Advertisements">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Advertisements/Editor/UnityEditor.Advertisements.dll</HintPath>

@@ -3,9 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using GestureRecognizer;
 
-namespace GestureRecognizer {
+namespace GestureRecognizer
+{
 
-    public class Gesture {
+    public class Gesture
+    {
 
         /// <summary>
         /// Name of the gesture. It acts like an ID for this gesture,
@@ -71,15 +73,17 @@ namespace GestureRecognizer {
         float PHI { get { return 0.5f * (-1f + Mathf.Sqrt(5f)); } }
 
 
-        public Gesture(List<Vector2> points, string name = "") {
+        public Gesture(List<Vector2> points, string name = "")
+        {
             this.Name = name;
             this.Points = points;
             this.IndicativeAngle = Gesture.GetIndicativeAngle(points);
             this.Points = this.Resample(NUMBER_OF_POINTS);
-            this.Points = this.RotateBy(-this.IndicativeAngle);
+            //this.Points = this.RotateBy(-this.IndicativeAngle);
             this.Points = this.ScaleTo(this.SQUARE_SIZE);
             this.Points = this.TranslateTo(this.ORIGIN);
             this.Vector = this.Vectorize();
+            //this.IndicativeAngle = 0;
         }
 
 
@@ -99,41 +103,53 @@ namespace GestureRecognizer {
         /// <param name="gestureLibrary">The library to run the gesture against.</param>
         /// <param name="useProtractor">If this is true, the faster Protractor algorithm will be used.</param>
         /// <returns>Recognized gesture's name and its score</returns>
-        public Result Recognize(GestureLibrary gestureLibrary, bool useProtractor = false) {
+        public Result Recognize(GestureLibrary gestureLibrary, bool useProtractor = false)
+        {
 
-            if (this.Points.Count <= 2) {
+            if (this.Points.Count <= 2)
+            {
                 return new Result("Not enough points captured", 0f);
-            } else {
+            }
+            else
+            {
                 List<Gesture> library = gestureLibrary.Library;
 
                 float bestDistance = float.MaxValue;
                 int matchedGesture = -1;
 
                 // Match the gesture against all the gestures in the library
-                for (int i = 0; i < library.Count; i++) {
+                for (int i = 0; i < library.Count; i++)
+                {
 
                     float distance = 0;
 
-                    if (useProtractor) {
+                    if (useProtractor)
+                    {
                         // See ProtractorAlgorithm() method's comments to find out more about it.
                         distance = ProtractorAlgorithm(library[i].Vector, this.Vector);
-                    } else {
+                    }
+                    else
+                    {
                         // See DollarOneAlgorithm() method's comments to find out more about it.
                         distance = DollarOneAlgorithm(library[i], -this.ANGLE_RANGE, +this.ANGLE_RANGE, this.ANGLE_PRECISION);
                     }
 
                     // If distance is better than the best distance take it as the best distance, 
                     // and gesture as the recognized one.
-                    if (distance < bestDistance) {
+                    if (distance < bestDistance)
+                    {
                         bestDistance = distance;
                         matchedGesture = i;
                     }
                 }
 
                 // No match, score zero. If there is a match, send the name of the recognized gesture and a score.
-                if (matchedGesture == -1) {
+                if (matchedGesture == -1)
+                {
                     return new Result("No match", 0f);
-                } else {
+                }
+                else
+                {
                     return new Result(library[matchedGesture].Name, useProtractor ? 1f / bestDistance : 1f - bestDistance / this.HALF_DIAGONAL);
                 }
             }
@@ -151,7 +167,8 @@ namespace GestureRecognizer {
         /// </summary>
         /// <param name="numberOfPoints"></param>
         /// <returns></returns>
-        public List<Vector2> Resample(int numberOfPoints) {
+        public List<Vector2> Resample(int numberOfPoints)
+        {
 
             float increment = Gesture.GetPathLength(this.Points) / (numberOfPoints - 1);
             float distanceCovered = 0.0f;
@@ -159,10 +176,12 @@ namespace GestureRecognizer {
             List<Vector2> resampledPoints = new List<Vector2>();
             resampledPoints.Add(this.Points[0]);
 
-            for (int i = 1; i < this.Points.Count; i++) {
+            for (int i = 1; i < this.Points.Count; i++)
+            {
                 float distance = Vector2.Distance(this.Points[i - 1], this.Points[i]);
 
-                if (distanceCovered + distance >= increment) {
+                if (distanceCovered + distance >= increment)
+                {
 
                     float x = this.Points[i - 1].x + ((increment - distanceCovered) / distance) * (this.Points[i].x - this.Points[i - 1].x);
                     float y = this.Points[i - 1].y + ((increment - distanceCovered) / distance) * (this.Points[i].y - this.Points[i - 1].y);
@@ -171,12 +190,15 @@ namespace GestureRecognizer {
                     this.Points.Insert(i, q);
                     distanceCovered = 0.0f;
 
-                } else {
+                }
+                else
+                {
                     distanceCovered += distance;
                 }
             }
 
-            if (resampledPoints.Count == numberOfPoints - 1) {
+            if (resampledPoints.Count == numberOfPoints - 1)
+            {
                 resampledPoints.Add(this.Points[this.Points.Count - 1]);
             }
 
@@ -189,14 +211,16 @@ namespace GestureRecognizer {
         /// </summary>
         /// <param name="angle">How much the gesture will be rotated.</param>
         /// <returns>List of rotated points</returns>
-        public List<Vector2> RotateBy(float angle) {
+        public List<Vector2> RotateBy(float angle)
+        {
 
             Vector2 center = Gesture.GetCenter(this.Points);
             float cos = Mathf.Cos(angle);
             float sin = Mathf.Sin(angle);
             List<Vector2> rotatedPoints = new List<Vector2>();
 
-            for (int i = 0; i < this.Points.Count; i++) {
+            for (int i = 0; i < this.Points.Count; i++)
+            {
                 float x = (this.Points[i].x - center.x) * cos - (this.Points[i].y - center.y) * sin + center.x;
                 float y = (this.Points[i].x - center.x) * sin + (this.Points[i].y - center.y) * cos + center.y;
                 rotatedPoints.Add(new Vector2(x, y));
@@ -212,12 +236,14 @@ namespace GestureRecognizer {
         /// </summary>
         /// <param name="size">Size of the bounding box to scale to</param>
         /// <returns>List of points which now fits in the predefined bounding box.</returns>
-        public List<Vector2> ScaleTo(float size) {
+        public List<Vector2> ScaleTo(float size)
+        {
 
             Rect boundingBox = Gesture.GetBoundingBox(this.Points);
             List<Vector2> scaledPoints = new List<Vector2>();
 
-            for (int i = 0; i < this.Points.Count; i++) {
+            for (int i = 0; i < this.Points.Count; i++)
+            {
                 float x = this.Points[i].x * (size / boundingBox.width);
                 float y = this.Points[i].y * (size / boundingBox.height);
                 scaledPoints.Add(new Vector2(x, y));
@@ -233,12 +259,14 @@ namespace GestureRecognizer {
         /// </summary>
         /// <param name="point">Points to move</param>
         /// <returns>List of moved points</returns>
-        public List<Vector2> TranslateTo(Vector2 point) {
+        public List<Vector2> TranslateTo(Vector2 point)
+        {
 
             Vector2 center = Gesture.GetCenter(this.Points);
             List<Vector2> translatedPoints = new List<Vector2>();
 
-            for (int i = 0; i < this.Points.Count; i++) {
+            for (int i = 0; i < this.Points.Count; i++)
+            {
                 float x = this.Points[i].x + point.x - center.x;
                 float y = this.Points[i].y + point.y - center.y;
                 translatedPoints.Add(new Vector2(x, y));
@@ -252,12 +280,14 @@ namespace GestureRecognizer {
         /// The heart of the Protractor algorithm. Creates a vector representation for the gesture.
         /// </summary>
         /// <returns></returns>
-        public List<float> Vectorize() {
+        public List<float> Vectorize()
+        {
 
             float sum = 0f;
             List<float> vector = new List<float>();
 
-            for (int i = 0; i < this.Points.Count; i++) {
+            for (int i = 0; i < this.Points.Count; i++)
+            {
                 vector.Add(this.Points[i].x);
                 vector.Add(this.Points[i].y);
                 sum += Mathf.Pow(this.Points[i].x, 2) + Mathf.Pow(this.Points[i].y, 2);
@@ -265,7 +295,8 @@ namespace GestureRecognizer {
 
             float magnitude = Mathf.Sqrt(sum);
 
-            for (int i = 0; i < vector.Count; i++) {
+            for (int i = 0; i < vector.Count; i++)
+            {
                 vector[i] /= magnitude;
             }
 
@@ -278,10 +309,12 @@ namespace GestureRecognizer {
         /// </summary>
         /// <param name="points">List of points</param>
         /// <returns></returns>
-        public static Vector2 GetCenter(List<Vector2> points) {
+        public static Vector2 GetCenter(List<Vector2> points)
+        {
             Vector2 center = Vector2.zero;
 
-            for (int i = 0; i < points.Count; i++) {
+            for (int i = 0; i < points.Count; i++)
+            {
                 center += points[i];
             }
 
@@ -294,14 +327,16 @@ namespace GestureRecognizer {
         /// </summary>
         /// <param name="points">List of points</param>
         /// <returns></returns>
-        public static Rect GetBoundingBox(List<Vector2> points) {
+        public static Rect GetBoundingBox(List<Vector2> points)
+        {
 
             float minX = float.MaxValue;
             float maxX = float.MinValue;
             float minY = float.MaxValue;
             float maxY = float.MinValue;
 
-            for (int i = 0; i < points.Count; i++) {
+            for (int i = 0; i < points.Count; i++)
+            {
                 minX = Mathf.Min(minX, points[i].x);
                 minY = Mathf.Min(minY, points[i].y);
                 maxX = Mathf.Max(maxX, points[i].x);
@@ -317,11 +352,13 @@ namespace GestureRecognizer {
         /// </summary>
         /// <param name="points">List of points</param>
         /// <returns></returns>
-        public static float GetPathLength(List<Vector2> points) {
+        public static float GetPathLength(List<Vector2> points)
+        {
 
             float length = 0;
 
-            for (int i = 1; i < points.Count; i++) {
+            for (int i = 1; i < points.Count; i++)
+            {
                 length += Vector2.Distance(points[i - 1], points[i]);
             }
 
@@ -336,11 +373,13 @@ namespace GestureRecognizer {
         /// <param name="points1">List of points</param>
         /// <param name="points2">List of points</param>
         /// <returns>Average distance between points</returns>
-        public static float GetDistanceBetweenPaths(List<Vector2> points1, List<Vector2> points2) {
+        public static float GetDistanceBetweenPaths(List<Vector2> points1, List<Vector2> points2)
+        {
 
             float distance = 0;
 
-            for (int i = 0; i < points1.Count; i++) {
+            for (int i = 0; i < points1.Count; i++)
+            {
                 distance += Vector2.Distance(points1[i], points2[i]);
             }
 
@@ -354,7 +393,8 @@ namespace GestureRecognizer {
         /// </summary>
         /// <param name="points">Points of a gesture</param>
         /// <returns>Indicative angle</returns>
-        public static float GetIndicativeAngle(List<Vector2> points) {
+        public static float GetIndicativeAngle(List<Vector2> points)
+        {
             Vector2 centroid = Gesture.GetCenter(points);
             return Mathf.Atan2(centroid.y - points[0].y, centroid.x - points[0].x);
         }
@@ -366,7 +406,8 @@ namespace GestureRecognizer {
         /// <param name="gesture">Gesture to compare to</param>
         /// <param name="angle">The angle to rotate this gesture</param>
         /// <returns>Distance between two gestures</returns>
-        public float GetDistanceAtAngle(Gesture gesture, float angle) {
+        public float GetDistanceAtAngle(Gesture gesture, float angle)
+        {
             List<Vector2> newPoints = this.RotateBy(angle);
             return Gesture.GetDistanceBetweenPaths(newPoints, gesture.Points);
         }
@@ -393,21 +434,26 @@ namespace GestureRecognizer {
         /// <param name="b">Positive angle range</param>
         /// <param name="threshold">Angle precision</param>
         /// <returns>Score</returns>
-        public float DollarOneAlgorithm(Gesture gesture, float a, float b, float threshold) {
+        public float DollarOneAlgorithm(Gesture gesture, float a, float b, float threshold)
+        {
 
             float x1 = this.PHI * a + (1f - this.PHI) * b;
             float f1 = this.GetDistanceAtAngle(gesture, x1);
             float x2 = (1f - this.PHI) * a + this.PHI * b;
             float f2 = this.GetDistanceAtAngle(gesture, x2);
 
-            while (Mathf.Abs(b - a) > threshold) {
-                if (f1 < f2) {
+            while (Mathf.Abs(b - a) > threshold)
+            {
+                if (f1 < f2)
+                {
                     b = x2;
                     x2 = x1;
                     f2 = f1;
                     x1 = this.PHI * a + (1f - this.PHI) * b;
                     f1 = this.GetDistanceAtAngle(gesture, x1);
-                } else {
+                }
+                else
+                {
                     a = x1;
                     x1 = x2;
                     f1 = f2;
@@ -427,11 +473,13 @@ namespace GestureRecognizer {
         /// <param name="gestureVector"></param>
         /// <param name="otherGestureVector"></param>
         /// <returns></returns>
-        public float ProtractorAlgorithm(List<float> gestureVector, List<float> otherGestureVector) {
+        public float ProtractorAlgorithm(List<float> gestureVector, List<float> otherGestureVector)
+        {
             float a = 0f;
             float b = 0f;
 
-            for (int i = 0; i < gestureVector.Count; i += 2) {
+            for (int i = 0; i < gestureVector.Count; i += 2)
+            {
                 a += gestureVector[i] * otherGestureVector[i] + gestureVector[i + 1] * otherGestureVector[i + 1];
                 b += gestureVector[i] * otherGestureVector[i + 1] - gestureVector[i + 1] * otherGestureVector[i];
             }
@@ -441,11 +489,13 @@ namespace GestureRecognizer {
         }
 
 
-        public override string ToString() {
+        public override string ToString()
+        {
 
             string message = this.Name + "; ";
 
-            foreach (Vector2 v in this.Points) {
+            foreach (Vector2 v in this.Points)
+            {
                 message += v.ToString() + " ";
             }
 

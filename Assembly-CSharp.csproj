@@ -63,9 +63,9 @@
      <Compile Include="Assets\MyScripts\GameManager.cs" />
      <Compile Include="Assets\MyScripts\GeneralManagment.cs" />
      <Compile Include="Assets\MyScripts\MenuSwitcher.cs" />
+     <None Include="Assets\Resources\shapes.xml" />
      <None Include="Assets\GestureRecognizer\Resources\numbers.xml" />
      <None Include="Assets\GestureRecognizer\Resources\multistroke_shapes.xml" />
-     <None Include="Assets\GestureRecognizer\Resources\shapes.xml" />
      <None Include="Assets\GestureRecognizer\Resources\alphabet.xml" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>

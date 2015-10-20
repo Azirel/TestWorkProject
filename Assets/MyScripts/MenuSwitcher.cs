@@ -11,14 +11,15 @@ public class MenuSwitcher : MonoBehaviour
     GeneralManagment gm;
     public RectTransform gameDrawArea;
     public RectTransform additionDrawArea;
-    LineRenderer line;
+    public LineRenderer line;
     // Use this for initialization
     void Start()
     {
         cms = GetComponent<CursorManagerScript>();
         gm = GetComponent<GeneralManagment>();
         StartMenuEnable();
-        line = GetComponent<LineRenderer>();
+        //line = GetComponent<LineRenderer>();
+        //line = cms.line;
         //Debug.Log("StartmenuEnabled");
     }
 
@@ -36,7 +37,11 @@ public class MenuSwitcher : MonoBehaviour
         gm.isInStartMenu = true;
         gm.isInGame = false;
         gm.isInAddition = false;
-        line.enabled = false;
+        if (line==null)
+        {
+            Debug.Log("Лажа!");
+        }
+            line.SetVertexCount(0); 
     }
     public void AdditionMenuEnable()
     {
