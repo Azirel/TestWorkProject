@@ -76,7 +76,7 @@ namespace GestureRecognizer {
             this.Points = points;
             this.IndicativeAngle = Gesture.GetIndicativeAngle(points);
             this.Points = this.Resample(NUMBER_OF_POINTS);
-            this.Points = this.RotateBy(-this.IndicativeAngle);
+            //this.Points = this.RotateBy(-this.IndicativeAngle);
             this.Points = this.ScaleTo(this.SQUARE_SIZE);
             this.Points = this.TranslateTo(this.ORIGIN);
             this.Vector = this.Vectorize();
