@@ -37,11 +37,8 @@ public class MenuSwitcher : MonoBehaviour
         gm.isInStartMenu = true;
         gm.isInGame = false;
         gm.isInAddition = false;
-        if (line==null)
-        {
-            Debug.Log("Лажа!");
-        }
-            line.SetVertexCount(0); 
+        gm.lineForShowWhatToDraw.enabled = false;
+        gm.startOverButton.SetActive(false);
     }
     public void AdditionMenuEnable()
     {
@@ -66,5 +63,8 @@ public class MenuSwitcher : MonoBehaviour
         gm.isInAddition = false;
         gm.drawArea.gameObject.SetActive(true);
         gm.drawArea = gameDrawArea;
+        gm.GestureListForming();
+        gm.inInShowingState = true;
+        gm.startOverButton.SetActive(false);
     }
 }

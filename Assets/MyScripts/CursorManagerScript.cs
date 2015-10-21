@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using GestureRecognizer;
 
 public class CursorManagerScript : MonoBehaviour
 {
@@ -41,7 +42,7 @@ public class CursorManagerScript : MonoBehaviour
         pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         pos.z = 0;
         //gameObject.transform.position = pos;
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0) || Utility.IsTouchDevice())
         {
             AddPoint(pos);
             line.enabled = true;
@@ -49,16 +50,16 @@ public class CursorManagerScript : MonoBehaviour
             {
                 line.SetPosition(0, pos);
             }
-            catch (System.Exception)
+            catch (System.Exception e)
             {
-                   
+                line.SetVertexCount(1);
             }
         }
         ModifyLine();
         if (pointsList.Count > 0)
         {
             //pointsCountViewer.text = pointsList.Count.ToString();
-            StartCoroutine("LastPointsEliminator");
+            LastPointsEliminator();
         }
         else line.enabled = false;
         
@@ -87,7 +88,7 @@ public class CursorManagerScript : MonoBehaviour
             line.SetPosition(i, pointsList[i].position);
         }
     }
-    IEnumerator LastPointsEliminator()
+    void LastPointsEliminator()
     {
         foreach (var item in pointsList)
         {
@@ -95,6 +96,5 @@ public class CursorManagerScript : MonoBehaviour
             if (item.delaysCount < 1)
                 pointsList.Remove(item);
         }
-        yield return new WaitForSeconds(delayTime);
     }
 }
