@@ -45,6 +45,18 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\GestureRecognizer\Scripts\Demo\GestureCapturePoints.cs" />
+     <Compile Include="Assets\GestureRecognizer\Scripts\Demo\GestureDemoEvent.cs" />
+     <Compile Include="Assets\GestureRecognizer\Scripts\GestureRecognizer\Gesture.cs" />
+     <Compile Include="Assets\GestureRecognizer\Scripts\GestureRecognizer\GestureBehaviour.cs" />
+     <Compile Include="Assets\GestureRecognizer\Scripts\GestureRecognizer\GestureLibrary.cs" />
+     <Compile Include="Assets\GestureRecognizer\Scripts\MultiStrokeRecognizer\MultiStroke.cs" />
+     <Compile Include="Assets\GestureRecognizer\Scripts\MultiStrokeRecognizer\MultiStrokeBehaviour.cs" />
+     <Compile Include="Assets\GestureRecognizer\Scripts\MultiStrokeRecognizer\MultiStrokeLibrary.cs" />
+     <Compile Include="Assets\GestureRecognizer\Scripts\MultiStrokeRecognizer\MultiStrokePoint.cs" />
+     <Compile Include="Assets\GestureRecognizer\Scripts\Utility\FileTools.cs" />
+     <Compile Include="Assets\GestureRecognizer\Scripts\Utility\Result.cs" />
+     <Compile Include="Assets\GestureRecognizer\Scripts\Utility\Utility.cs" />
      <Compile Include="Assets\MyScripts\AdditionManager.cs" />
      <Compile Include="Assets\MyScripts\CursorManagerScript.cs" />
      <Compile Include="Assets\MyScripts\GameManager.cs" />
