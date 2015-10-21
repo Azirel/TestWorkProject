@@ -6,95 +6,62 @@ using GestureRecognizer;
 
 public class CursorManagerScript : MonoBehaviour
 {
-    Vector3 pos;
     public LineRenderer line;
-    public int delays = 0;
-    //public UnityEngine.UI.Text text;
-    public float delayTime;
-    List<TracePoint> pointsList;
-    TracePoint tempPoint;
-    //public Text pointsCountViewer;
-    //public Text vertexesCountViewer;
-    int timer = 0;
-    public float startthinckness;
-    public float endthinckness;
     class TracePoint
     {
-        public Vector3 position;
-        public int delaysCount;
+        public Vector3 point;
+        public float lifeTimne;
+        public TracePoint(Vector3 v3,float time)
+        {
+            point = v3;
+            this.lifeTimne = time;
+        }
     }
-    // Use this for initialization
+    public float pointsLifeTime;
+    List<TracePoint> points;
+    Vector3 pos;
+    public float startThincknes;
+    public float endThincknes;
     void Start()
     {
-        line = GetComponent<LineRenderer>();
-        line.SetWidth(startthinckness, endthinckness);
-        pointsList = new List<TracePoint>();
-        //line.SetVertexCount(0);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
+        points = new List<TracePoint>();
+        line.SetWidth(startThincknes, endThincknes);
     }
     void FixedUpdate()
     {
-        //pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        pos.z = 0;
-        //gameObject.transform.position = pos;
-        if (Input.GetMouseButton(0) || Utility.IsTouchDevice())
+        if (Utility.IsTouchDevice() || Input.GetMouseButton(0))
         {
-            AddPoint(pos);
+            pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            pos.z = 0;
+            points.Insert(0, new TracePoint(pos, pointsLifeTime));
+        }
+        LastPointsEliminator();
+        if(points.Count>1)
+        {
             line.enabled = true;
-            try
-            {
-                line.SetPosition(0, pos);
-            }
-            catch (System.Exception e)
-            {
-                line.SetVertexCount(1);
-            }
         }
         ModifyLine();
-        if (pointsList.Count > 0)
-        {
-            //pointsCountViewer.text = pointsList.Count.ToString();
-            LastPointsEliminator();
-        }
-        else line.enabled = false;
-        
-    }
-    void TextUpdate()
-    {
-    }
-    void AddPoint(Vector3 pointPos)
-    {
-        tempPoint = new TracePoint();
-
-        tempPoint.position = pointPos;
-        tempPoint.delaysCount = delays;
-
-        if (!pointsList.Contains(tempPoint))
-        {
-            pointsList.Insert(0, tempPoint);
-        }
     }
     void ModifyLine()
     {
-        line.SetVertexCount(pointsList.Count);
-        //Debug.Log(pointsList.Count);
-        for (int i = 1; i < pointsList.Count; i++)
+        line.SetVertexCount(points.Count);
+        for (int i = 0; i < points.Count; i++)
         {
-            line.SetPosition(i, pointsList[i].position);
+            line.SetPosition(i, points[i].point);
         }
     }
     void LastPointsEliminator()
     {
-        foreach (var item in pointsList)
+        foreach (var point in points)
         {
-            item.delaysCount--;
-            if (item.delaysCount < 1)
-                pointsList.Remove(item);
+            point.lifeTimne -= Time.deltaTime;
+        }
+        for (int i = points.Count-1; i >-1; i--)
+        {
+            if(points[i].lifeTimne<=0f)
+            {
+                points.RemoveAt(i);
+            }
         }
     }
 }

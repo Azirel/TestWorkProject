@@ -39,6 +39,7 @@ public class MenuSwitcher : MonoBehaviour
         gm.isInAddition = false;
         gm.lineForShowWhatToDraw.enabled = false;
         gm.startOverButton.SetActive(false);
+        gm.GetComponent<LineRenderer>().enabled = false;
     }
     public void AdditionMenuEnable()
     {
@@ -49,6 +50,7 @@ public class MenuSwitcher : MonoBehaviour
         gm.isInStartMenu = false;
         gm.isInGame = false;
         gm.isInAddition = true;
+        gm.inAttemptState = false;
         gm.drawArea = additionDrawArea;
         gm.GetComponent<LineRenderer>().enabled = true;
     }
@@ -66,5 +68,6 @@ public class MenuSwitcher : MonoBehaviour
         gm.GestureListForming();
         gm.inInShowingState = true;
         gm.startOverButton.SetActive(false);
+        gm.currentTime = gm.wholeTime;
     }
 }

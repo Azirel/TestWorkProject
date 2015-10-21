@@ -108,7 +108,7 @@ public class GeneralManagment : MonoBehaviour
 
     public float wholeTime;
 
-    float currentTime;
+    public float currentTime;
 
     int score = 0;
 
@@ -164,7 +164,7 @@ public class GeneralManagment : MonoBehaviour
 
                 //gestureRenderer.enabled = false;
                 messageArea.text = "";
-                Debug.Log("Ой а вот таймер");
+                //Debug.Log("Ой а вот таймер");
             }
             // Track user input if GestureRecognition is enabled.
             else
@@ -307,8 +307,6 @@ public class GeneralManagment : MonoBehaviour
         isEnabled = false;
         isInGame = false;
         inAttemptState = false;
-        messageArea.color = Color.yellow;
-        messageArea.text = "Draw it!";
         float leftBound = -3.7f;
         float rightBound = 3.4f;
         float upperBound = -1.94f;
@@ -363,6 +361,8 @@ public class GeneralManagment : MonoBehaviour
         lineForShowWhatToDraw.enabled = true;
         ///to do attemptDelayTime need to be divided on Something
         yield return new WaitForSeconds(1);
+        messageArea.color = Color.yellow;
+        messageArea.text = "Draw it!";
         currentTime = wholeTime / Mathf.Pow(divider, (float)(score + 1));
         rightAnswer = gestureToDraw.Name;
         lineForShowWhatToDraw.enabled = false;
